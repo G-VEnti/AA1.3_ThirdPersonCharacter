@@ -39,6 +39,8 @@ public class CharacterMover : MonoBehaviour
         {
             rb.linearVelocity = transform.up * jumpForce;
         }
+
+        Debug.Log(velocity);
     }
     void FixedUpdate()
     {
