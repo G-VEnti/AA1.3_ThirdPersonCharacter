@@ -11,6 +11,8 @@ public class CharacterMover : MonoBehaviour
     public float movementDeceleration;
     Vector3 currentMov;
     public float speedMovement;
+    public float speedRun;
+    public float speedWalk;
     public float speedTurn;
     public float jumpForce;
     Rigidbody rb;
@@ -40,7 +42,7 @@ public class CharacterMover : MonoBehaviour
             rb.linearVelocity = transform.up * jumpForce;
         }
 
-        Debug.Log(velocity);
+        Debug.Log(velocity.z);
     }
     void FixedUpdate()
     {
@@ -65,6 +67,8 @@ public class CharacterMover : MonoBehaviour
         }
 
         airSpeedFollowupCurrent = Mathf.Clamp(airSpeedFollowupCurrent + Time.fixedDeltaTime, 0, airSpeedFollowup);
+
+        Debug.Log(velocity.y);
     }
     void Movement()
     {
@@ -92,6 +96,9 @@ public class CharacterMover : MonoBehaviour
             {
                 currentMov = Vector3.Lerp(currentMov, mov, movementDeceleration * Time.fixedDeltaTime);
             }
+
+            float targetSpeed = input.Player.Sprint.IsPressed() ? speedRun : speedWalk;
+            speedMovement = Mathf.Lerp(speedMovement, targetSpeed, movementAcceleration * Time.fixedDeltaTime);
 
             Debug.DrawRay(transform.position, currentMov, Color.green);
             Quaternion rot = currentMov.magnitude > 0.01f ? Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(currentMov), speedTurn * Time.fixedDeltaTime) : transform.rotation;

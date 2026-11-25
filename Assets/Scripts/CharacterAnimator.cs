@@ -18,6 +18,9 @@ public class CharacterAnimator : MonoBehaviour
     public RaycastLookAt cameraLookAt;
     public float lookAtSpeed = 10;
     Vector3 lookat;
+    public Transform headTarget;
+    public Transform rightHandTarget;
+    public Transform leftHandTarget;
     private void Start()
     {
         anim = GetComponent<Animator>();
@@ -56,5 +59,24 @@ public class CharacterAnimator : MonoBehaviour
             forwardLookAt = Quaternion.AngleAxis(angle > 0 ? -maxAngle : maxAngle, axis) * transform.forward;
             lookat = cameraLookAt.transform.position + forwardLookAt * distance;
         }
+    }
+
+    void OnAnimatorIK(int layerIndex)
+    {
+        // Head IK
+        anim.SetLookAtPosition(headTarget.position);
+        anim.SetLookAtWeight(1, 0.5f, 1);
+
+        // Right hand IK
+        anim.SetIKPosition(AvatarIKGoal.RightHand, rightHandTarget.position);
+        anim.SetIKRotation(AvatarIKGoal.RightHand, rightHandTarget.rotation);
+        anim.SetIKPositionWeight(AvatarIKGoal.RightHand, 1);
+        anim.SetIKRotationWeight(AvatarIKGoal.RightHand, 1);
+
+        // Left hand ik
+        anim.SetIKPosition(AvatarIKGoal.LeftHand, leftHandTarget.position);
+        anim.SetIKRotation(AvatarIKGoal.LeftHand, leftHandTarget.rotation);
+        anim.SetIKPositionWeight(AvatarIKGoal.LeftHand, 1);
+        anim.SetIKRotationWeight(AvatarIKGoal.LeftHand, 1);
     }
 }
